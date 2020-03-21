@@ -8,15 +8,15 @@ public class TestResult {
     private final String workUnit;
     private final String name;
     private final Duration duration;
-    private final int repetitions;
-    private final int concurrency;
+    private final int numberOfWorkUnits;
+    private final int expectedConcurrency;
 
-    public TestResult(ConcurrencyTest concurrencyTest, UnitOfWork<?> unitOfWork, Duration duration, int repetitions, int concurrency) {
+    public TestResult(ConcurrencyTest concurrencyTest, UnitOfWork<?> unitOfWork, Duration duration, int numberOfWorkUnits, int expectedConcurrency) {
         this.name = concurrencyTest.getClass().getSimpleName();
         this.workUnit = unitOfWork.getClass().getSimpleName();
         this.duration = duration;
-        this.repetitions = repetitions;
-        this.concurrency = concurrency;
+        this.numberOfWorkUnits = numberOfWorkUnits;
+        this.expectedConcurrency = expectedConcurrency;
     }
 
     @Override
@@ -24,8 +24,8 @@ public class TestResult {
         return workUnit + "," +
                 name + "," +
                 duration.toMillis() + "," +
-                repetitions + "," +
-                concurrency;
+                numberOfWorkUnits + "," +
+                expectedConcurrency;
     }
 
     public String getWorkUnit() {
@@ -40,11 +40,11 @@ public class TestResult {
         return duration;
     }
 
-    public int getRepetitions() {
-        return repetitions;
+    public int getNumberOfWorkUnits() {
+        return numberOfWorkUnits;
     }
 
-    public int getConcurrency() {
-        return concurrency;
+    public int getExpectedConcurrency() {
+        return expectedConcurrency;
     }
 }

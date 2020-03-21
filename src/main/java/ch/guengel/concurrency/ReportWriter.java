@@ -15,7 +15,7 @@ public class ReportWriter implements AutoCloseable {
     }
 
     private void writeHeader() throws IOException {
-        bufferedWriter.write("Work Unit,Test Name,Time[ms],Number of Tests,Concurrency");
+        bufferedWriter.write("Work Unit,Test Name,Time[ms],Number Work Units,Concurrency");
         bufferedWriter.newLine();
     }
 
@@ -27,9 +27,9 @@ public class ReportWriter implements AutoCloseable {
             bufferedWriter.write(',');
             bufferedWriter.write(Long.toString(testResult.getDuration().toMillis()));
             bufferedWriter.write(',');
-            bufferedWriter.write(Integer.toString(testResult.getRepetitions()));
+            bufferedWriter.write(Integer.toString(testResult.getNumberOfWorkUnits()));
             bufferedWriter.write(',');
-            bufferedWriter.write(Integer.toString(testResult.getConcurrency()));
+            bufferedWriter.write(Integer.toString(testResult.getExpectedConcurrency()));
             bufferedWriter.newLine();
         } catch (IOException e) {
             e.printStackTrace();
