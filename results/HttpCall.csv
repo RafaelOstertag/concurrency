@@ -1,0 +1,10 @@
+Work Unit,Test Name,Time[ms],Number of Tests,Concurrency
+HttpCall,NoConcurrency,850,1,1
+HttpCall,CompletionStage,1719,10,-1
+HttpCall,CompletionStageWithExecutorService,2623,10,10
+HttpCall,CompletionService,2814,10,10
+HttpCall,SimpleStream,12868,10,1
+HttpCall,SimpleStreamMapAsync,2644,10,10
+HttpCall,SimpleStreamAsync,13524,10,1
+HttpCall,StreamQueue,11258,10,10
+HttpCall,StreamQueueAsync,11324,10,10

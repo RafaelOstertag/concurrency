@@ -1,0 +1,10 @@
+Work Unit,Test Name,Time[ms],Number of Tests,Concurrency
+Pi,NoConcurrency,103,1,1
+Pi,CompletionStage,208,10,-1
+Pi,CompletionStageWithExecutorService,212,10,10
+Pi,CompletionService,220,10,10
+Pi,SimpleStream,1007,10,1
+Pi,SimpleStreamMapAsync,212,10,10
+Pi,SimpleStreamAsync,1012,10,1
+Pi,StreamQueue,907,10,10
+Pi,StreamQueueAsync,907,10,10
