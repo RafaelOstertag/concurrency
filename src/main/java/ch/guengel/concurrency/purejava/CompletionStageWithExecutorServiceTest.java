@@ -13,13 +13,13 @@ import java.util.concurrent.Executors;
 public class CompletionStageWithExecutorServiceTest implements ConcurrencyTest {
     private final UnitOfWork<?> unitOfWork;
     private final ExecutorService fixedExecutor;
-    private final int repetitions;
+    private final int numberOfWorkUnits;
     private final int concurrency;
 
 
-    public CompletionStageWithExecutorServiceTest(UnitOfWork<?> unitOfWork, int concurrency, int repetitions) {
+    public CompletionStageWithExecutorServiceTest(UnitOfWork<?> unitOfWork, int concurrency, int numberOfWorkUnits) {
         this.unitOfWork = unitOfWork;
-        this.repetitions = repetitions;
+        this.numberOfWorkUnits = numberOfWorkUnits;
         this.concurrency = concurrency;
 
         fixedExecutor = Executors.newFixedThreadPool(concurrency);
@@ -27,14 +27,14 @@ public class CompletionStageWithExecutorServiceTest implements ConcurrencyTest {
 
     @Override
     public TestResult test() {
-        CompletableFuture<?>[] completableFutures = new CompletableFuture[repetitions];
-        for (int i = 0; i < repetitions; i++) {
+        CompletableFuture<?>[] completableFutures = new CompletableFuture[numberOfWorkUnits];
+        for (int i = 0; i < numberOfWorkUnits; i++) {
             completableFutures[i] = CompletableFuture.supplyAsync(unitOfWork::result, fixedExecutor);
         }
 
         TimingResult<Void> voidTimingResult = Timing.timeIt(() -> CompletableFuture.allOf(completableFutures).join());
 
-        return new TestResult(this, unitOfWork, voidTimingResult.getDuration(), repetitions, concurrency);
+        return new TestResult(this, unitOfWork, voidTimingResult.getDuration(), numberOfWorkUnits, concurrency);
     }
 
     @Override

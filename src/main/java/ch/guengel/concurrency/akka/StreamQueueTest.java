@@ -18,35 +18,34 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class StreamQueueTest implements ConcurrencyTest {
-    private final SourceQueueWithComplete<Object> sourceQueue;
     private final Source<QueueOfferResult, NotUsed> source;
-    private final int repetitions;
+    private final int numberOfWorkUnits;
     private final UnitOfWork<?> unitOfWork;
     private final int concurrency;
     private final Materializer materializer;
 
-    public StreamQueueTest(UnitOfWork<?> unitOfWork, int concurrency, int repetitions, Materializer materializer) {
+    public StreamQueueTest(UnitOfWork<?> unitOfWork, int concurrency, int numberOfWorkUnits, Materializer materializer) {
         this.unitOfWork = unitOfWork;
         this.concurrency = concurrency;
         this.materializer = materializer;
-        this.sourceQueue = Source.queue(concurrency, OverflowStrategy.backpressure())
+        SourceQueueWithComplete<Object> sourceQueue = Source.queue(concurrency, OverflowStrategy.backpressure())
                 .map(n -> unitOfWork.result())
                 .to(Sink.seq())
                 .run(materializer);
 
         this.source = Source
                 .from(IntStream
-                        .range(0, repetitions)
+                        .range(0, numberOfWorkUnits)
                         .boxed()
                         .collect(Collectors.toList()))
                 .map(sourceQueue::offer).mapAsync(concurrency, x -> x);
-        this.repetitions = repetitions;
+        this.numberOfWorkUnits = numberOfWorkUnits;
     }
 
     @Override
     public TestResult test() {
         TimingResult<Done> result = Timing.timeIt(() -> source.runWith(Sink.ignore(), materializer).toCompletableFuture().join());
-        return new TestResult(this, unitOfWork, result.getDuration(), repetitions, concurrency);
+        return new TestResult(this, unitOfWork, result.getDuration(), numberOfWorkUnits, concurrency);
     }
 
     @Override

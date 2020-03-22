@@ -10,22 +10,22 @@ import java.util.concurrent.CompletableFuture;
 
 public class CompletionStageTest implements ConcurrencyTest {
     private final UnitOfWork<?> unitOfWork;
-    private final int repetitions;
+    private final int numberOfWorkUnits;
 
-    public CompletionStageTest(UnitOfWork<?> unitOfWork, int repetitions) {
+    public CompletionStageTest(UnitOfWork<?> unitOfWork, int numberOfWorkUnits) {
         this.unitOfWork = unitOfWork;
-        this.repetitions = repetitions;
+        this.numberOfWorkUnits = numberOfWorkUnits;
     }
 
     @Override
     public TestResult test() {
-        CompletableFuture<?>[] completableFutures = new CompletableFuture[repetitions];
-        for (int i = 0; i < repetitions; i++) {
+        CompletableFuture<?>[] completableFutures = new CompletableFuture[numberOfWorkUnits];
+        for (int i = 0; i < numberOfWorkUnits; i++) {
             completableFutures[i] = CompletableFuture.supplyAsync(unitOfWork::result);
         }
 
         TimingResult<Void> voidTimingResult = Timing.timeIt(() -> CompletableFuture.allOf(completableFutures).join());
-        return new TestResult(this, unitOfWork, voidTimingResult.getDuration(), repetitions, -1);
+        return new TestResult(this, unitOfWork, voidTimingResult.getDuration(), numberOfWorkUnits, -1);
     }
 
     @Override

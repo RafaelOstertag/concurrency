@@ -16,26 +16,26 @@ import java.util.stream.IntStream;
 
 public class SimpleStreamTest implements ConcurrencyTest {
     private final Source<Object, NotUsed> source;
-    private final int repetitions;
+    private final int numberOfWorkUnits;
     private final UnitOfWork<?> unitOfWork;
     private final Materializer materializer;
 
-    public SimpleStreamTest(UnitOfWork<?> unitOfWork, int repetitions, Materializer materializer) {
+    public SimpleStreamTest(UnitOfWork<?> unitOfWork, int numberOfWorkUnits, Materializer materializer) {
         this.unitOfWork = unitOfWork;
         this.materializer = materializer;
         this.source = Source
                 .from(IntStream
-                        .range(0, repetitions)
+                        .range(0, numberOfWorkUnits)
                         .boxed()
                         .collect(Collectors.toList()))
                 .map(n -> unitOfWork.result());
-        this.repetitions = repetitions;
+        this.numberOfWorkUnits = numberOfWorkUnits;
     }
 
     @Override
     public TestResult test() {
         TimingResult<Done> result = Timing.timeIt(() -> source.runWith(Sink.ignore(), materializer).toCompletableFuture().join());
-        return new TestResult(this, unitOfWork, result.getDuration(), repetitions, 1);
+        return new TestResult(this, unitOfWork, result.getDuration(), numberOfWorkUnits, 1);
     }
 
     @Override

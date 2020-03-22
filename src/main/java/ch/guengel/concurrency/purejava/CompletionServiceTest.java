@@ -13,12 +13,12 @@ public class CompletionServiceTest implements ConcurrencyTest {
     private final java.util.concurrent.CompletionService<Object> completionService;
     private final UnitOfWork<?> unitOfWork;
     private final int concurrency;
-    private final int repetitions;
+    private final int numberOfWorkUnits;
 
-    public CompletionServiceTest(UnitOfWork<?> unitOfWork, int concurrency, int repetitions) {
+    public CompletionServiceTest(UnitOfWork<?> unitOfWork, int concurrency, int numberOfWorkUnits) {
         this.unitOfWork = unitOfWork;
         this.concurrency = concurrency;
-        this.repetitions = repetitions;
+        this.numberOfWorkUnits = numberOfWorkUnits;
 
         executorService = Executors.newFixedThreadPool(concurrency);
         completionService = new ExecutorCompletionService<>(executorService);
@@ -26,14 +26,14 @@ public class CompletionServiceTest implements ConcurrencyTest {
 
     @Override
     public TestResult test() {
-        Future<?>[] results = new Future[repetitions];
+        Future<?>[] results = new Future[numberOfWorkUnits];
 
         TimingResult<Boolean> booleanTimingResult = Timing.timeIt(() -> {
-            for (int i = 0; i < repetitions; i++) {
+            for (int i = 0; i < numberOfWorkUnits; i++) {
                 results[i] = completionService.submit(unitOfWork::result);
             }
 
-            for (int i = 0; i < repetitions; i++) {
+            for (int i = 0; i < numberOfWorkUnits; i++) {
                 try {
                     results[i].get();
                 } catch (InterruptedException | ExecutionException e) {
@@ -44,7 +44,7 @@ public class CompletionServiceTest implements ConcurrencyTest {
             return true;
         });
 
-        return new TestResult(this, unitOfWork, booleanTimingResult.getDuration(), repetitions, concurrency);
+        return new TestResult(this, unitOfWork, booleanTimingResult.getDuration(), numberOfWorkUnits, concurrency);
     }
 
     @Override
