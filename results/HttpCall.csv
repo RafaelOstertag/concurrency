@@ -1,10 +1,10 @@
-Work Unit,Test Name,Time[ms],Number of Tests,Concurrency
-HttpCall,NoConcurrency,850,1,1
-HttpCall,CompletionStage,1719,10,-1
-HttpCall,CompletionStageWithExecutorService,2623,10,10
-HttpCall,CompletionService,2814,10,10
-HttpCall,SimpleStream,12868,10,1
-HttpCall,SimpleStreamMapAsync,2644,10,10
-HttpCall,SimpleStreamAsync,13524,10,1
-HttpCall,StreamQueue,11258,10,10
-HttpCall,StreamQueueAsync,11324,10,10
+Work Unit,Test Name,Number Work Units,Expected Concurrency,Sample Size,mean[ms],min[ms],max[ms],stddev[ms]
+HttpCall,NoConcurrency,1,1,10,752.40,622.00,858.00,63.74
+HttpCall,CompletionStageTest,10,-1,10,1590.30,1546.00,1650.00,37.64
+HttpCall,CompletionStageWithExecutorServiceTest,10,10,10,1525.80,1349.00,2273.00,270.77
+HttpCall,CompletionServiceTest,10,10,10,1570.30,1521.00,1749.00,66.32
+HttpCall,SimpleStreamTest,10,1,10,7201.80,6388.00,7726.00,413.09
+HttpCall,SimpleStreamMapAsyncTest,10,10,10,1578.60,1539.00,1646.00,34.66
+HttpCall,SimpleStreamAsyncTest,10,1,10,7132.30,6278.00,7784.00,537.30
+HttpCall,StreamQueueTest,10,10,10,6591.10,5824.00,7260.00,383.85
+HttpCall,StreamQueueAsyncTest,10,10,10,5452.60,4453.00,6364.00,532.74

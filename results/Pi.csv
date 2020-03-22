@@ -1,10 +1,10 @@
-Work Unit,Test Name,Time[ms],Number of Tests,Concurrency
-Pi,NoConcurrency,103,1,1
-Pi,CompletionStage,208,10,-1
-Pi,CompletionStageWithExecutorService,212,10,10
-Pi,CompletionService,220,10,10
-Pi,SimpleStream,1007,10,1
-Pi,SimpleStreamMapAsync,212,10,10
-Pi,SimpleStreamAsync,1012,10,1
-Pi,StreamQueue,907,10,10
-Pi,StreamQueueAsync,907,10,10
+Work Unit,Test Name,Number Work Units,Expected Concurrency,Sample Size,mean[ms],min[ms],max[ms],stddev[ms]
+Pi,NoConcurrency,1,1,10,102.90,102.00,105.00,0.88
+Pi,CompletionStageTest,10,-1,10,232.70,216.00,239.00,6.86
+Pi,CompletionStageWithExecutorServiceTest,10,10,10,240.40,233.00,248.00,5.68
+Pi,CompletionServiceTest,10,10,10,245.40,240.00,251.00,4.12
+Pi,SimpleStreamTest,10,1,10,1082.20,1012.00,1115.00,38.91
+Pi,SimpleStreamMapAsyncTest,10,10,10,249.90,236.00,279.00,13.03
+Pi,SimpleStreamAsyncTest,10,1,10,1036.40,1008.00,1090.00,28.91
+Pi,StreamQueueTest,10,10,10,1010.10,908.00,1055.00,38.65
+Pi,StreamQueueAsyncTest,10,10,10,1071.30,970.00,1206.00,79.93
