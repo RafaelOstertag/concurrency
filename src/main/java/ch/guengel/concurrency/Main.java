@@ -64,7 +64,7 @@ public class Main {
     @NotNull
     private static List<ConcurrencyTest> compileConcurrencyTests(UnitOfWork<?> unitOfWork, Materializer materializer) {
         return Arrays.asList(
-                new NoConcurrency(unitOfWork),
+                new NoConcurrency(unitOfWork, NUMBER_OF_WORK_UNITS),
                 new CompletionStageTest(unitOfWork, NUMBER_OF_WORK_UNITS),
                 new CompletionStageWithExecutorServiceTest(unitOfWork, CONCURRENCY_LEVEL, NUMBER_OF_WORK_UNITS),
                 //new CompletionStageWithExecutorService(unitOfWork, 2, 10),
@@ -73,6 +73,8 @@ public class Main {
                 new SimpleStreamTest(unitOfWork, NUMBER_OF_WORK_UNITS, materializer),
                 new SimpleStreamMapAsyncTest(unitOfWork, CONCURRENCY_LEVEL, NUMBER_OF_WORK_UNITS, materializer),
                 new SimpleStreamAsyncTest(unitOfWork, NUMBER_OF_WORK_UNITS, materializer),
+                new StreamFlatMapMergeTest(unitOfWork, CONCURRENCY_LEVEL, NUMBER_OF_WORK_UNITS, materializer),
+                new StreamFlatMapMergeAsyncTest(unitOfWork, CONCURRENCY_LEVEL, NUMBER_OF_WORK_UNITS, materializer),
                 new StreamQueueTest(unitOfWork, CONCURRENCY_LEVEL, NUMBER_OF_WORK_UNITS, materializer),
                 new StreamQueueAsyncTest(unitOfWork, CONCURRENCY_LEVEL, NUMBER_OF_WORK_UNITS, materializer)
         );

@@ -8,15 +8,24 @@ import ch.guengel.concurrency.workunits.UnitOfWork;
 
 public class NoConcurrency implements ConcurrencyTest {
     private final UnitOfWork<?> unitOfWork;
+    private final int numberOfWorkUnits;
 
-    public NoConcurrency(UnitOfWork<?> unitOfWork) {
+    public NoConcurrency(UnitOfWork<?> unitOfWork, int numberOfWorkUnits) {
         this.unitOfWork = unitOfWork;
+        this.numberOfWorkUnits = numberOfWorkUnits;
     }
 
     @Override
     public TestResult test() {
-        TimingResult<?> timingResult = Timing.timeIt(unitOfWork::result);
-        return new TestResult(this, unitOfWork, timingResult.getDuration(), 1, 1);
+        TimingResult<Object> timingResult = Timing.timeIt(() -> {
+                    Object object = null;
+                    for (int i = 0; i < numberOfWorkUnits; i++) {
+                        object = unitOfWork.result();
+                    }
+                    return object;
+                }
+        );
+        return new TestResult(this, unitOfWork, timingResult.getDuration(), numberOfWorkUnits, 1);
     }
 
     @Override
