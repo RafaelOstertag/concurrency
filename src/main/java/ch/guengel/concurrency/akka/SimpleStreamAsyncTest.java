@@ -1,6 +1,5 @@
 package ch.guengel.concurrency.akka;
 
-import akka.Done;
 import akka.NotUsed;
 import akka.stream.Materializer;
 import akka.stream.javadsl.Sink;
@@ -11,6 +10,7 @@ import ch.guengel.concurrency.timing.Timing;
 import ch.guengel.concurrency.timing.TimingResult;
 import ch.guengel.concurrency.workunits.UnitOfWork;
 
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -35,7 +35,7 @@ public class SimpleStreamAsyncTest implements ConcurrencyTest {
 
     @Override
     public TestResult test() {
-        TimingResult<Done> result = Timing.timeIt(() -> source.runWith(Sink.ignore(), materializer).toCompletableFuture().join());
+        TimingResult<? extends List<?>> result = Timing.timeIt(() -> source.runWith(Sink.seq(), materializer).toCompletableFuture().join());
         return new TestResult(this, unitOfWork, result.getDuration(), numberOfWorkUnits, 1);
     }
 
