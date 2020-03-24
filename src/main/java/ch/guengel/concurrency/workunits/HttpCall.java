@@ -12,7 +12,7 @@ public class HttpCall implements UnitOfWork<String> {
     @Override
     public String result() {
         Request request = new Request.Builder()
-                .url("https://www.google.com/search?q=21%2B21")
+                .url("https://www.guengel.ch")
                 .build();
 
         try (Response response = client.newCall(request).execute()) {
