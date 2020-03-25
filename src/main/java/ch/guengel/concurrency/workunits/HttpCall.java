@@ -12,7 +12,7 @@ public class HttpCall implements UnitOfWork<String> {
     @Override
     public String result() {
         Request request = new Request.Builder()
-                .url("https://www.guengel.ch")
+                .url("https://yapet.guengel.ch/downloads/yapet-2.3.tar.xz")
                 .build();
 
         try (Response response = client.newCall(request).execute()) {
