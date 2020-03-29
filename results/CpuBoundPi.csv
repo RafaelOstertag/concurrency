@@ -1,0 +1,14 @@
+Work Unit,Test Name,Number Work Units,Expected Concurrency,Sample Size,mean[ms],min[ms],max[ms],stddev[ms]
+CpuBoundPi,OneUnitOfWork,1,1,10,101.10,101.00,102.00,0.32
+CpuBoundPi,NoConcurrency,10,1,10,1008.40,1006.00,1013.00,2.41
+CpuBoundPi,CompletionStageTest,10,-1,10,224.80,211.00,232.00,6.70
+CpuBoundPi,CompletionStageWithExecutorServiceTest,10,10,10,229.60,219.00,234.00,4.90
+CpuBoundPi,CompletionServiceTest,10,10,10,228.10,223.00,234.00,3.18
+CpuBoundPi,SimpleStreamTest,10,1,10,1020.00,1007.00,1043.00,14.33
+CpuBoundPi,SimpleStreamMapAsyncTest,10,10,10,226.00,215.00,233.00,4.83
+CpuBoundPi,SimpleStreamAsyncTest,10,1,10,1009.30,1003.00,1015.00,3.86
+CpuBoundPi,AkkaParallelTest,10,10,10,1012.90,1008.00,1023.00,4.65
+CpuBoundPi,StreamFlatMapMergeTest,10,10,10,1013.70,1008.00,1036.00,7.99
+CpuBoundPi,StreamFlatMapMergeAsyncTest,10,10,10,1030.50,1010.00,1066.00,20.50
+CpuBoundPi,StreamQueueTest,10,10,10,997.20,911.00,1012.00,30.51
+CpuBoundPi,StreamQueueAsyncTest,10,10,10,1008.10,919.00,1129.00,75.21

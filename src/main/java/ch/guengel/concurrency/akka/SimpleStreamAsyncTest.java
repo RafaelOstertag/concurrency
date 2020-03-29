@@ -34,6 +34,11 @@ public class SimpleStreamAsyncTest implements ConcurrencyTest {
     }
 
     @Override
+    public String getTestName() {
+        return unitOfWork.getClass().getSimpleName() + ":" + this.getClass().getSimpleName();
+    }
+
+    @Override
     public TestResult test() {
         TimingResult<? extends List<?>> result = Timing.timeIt(() -> source.runWith(Sink.seq(), materializer).toCompletableFuture().join());
         return new TestResult(this, unitOfWork, result.getDuration(), numberOfWorkUnits, 1);

@@ -1,0 +1,14 @@
+Work Unit,Test Name,Number Work Units,Expected Concurrency,Sample Size,mean[ms],min[ms],max[ms],stddev[ms]
+HttpCallHttpClientPooling,OneUnitOfWork,1,1,10,185.40,137.00,261.00,45.20
+HttpCallHttpClientPooling,NoConcurrency,10,1,10,1822.30,1668.00,1915.00,87.37
+HttpCallHttpClientPooling,CompletionStageTest,10,-1,10,924.10,833.00,1140.00,101.52
+HttpCallHttpClientPooling,CompletionStageWithExecutorServiceTest,10,10,10,887.70,804.00,1115.00,88.88
+HttpCallHttpClientPooling,CompletionServiceTest,10,10,10,913.70,807.00,1010.00,62.46
+HttpCallHttpClientPooling,SimpleStreamTest,10,1,10,1863.40,1780.00,1990.00,64.85
+HttpCallHttpClientPooling,SimpleStreamMapAsyncTest,10,10,10,989.00,885.00,1359.00,140.97
+HttpCallHttpClientPooling,SimpleStreamAsyncTest,10,1,10,1848.20,1630.00,1999.00,107.63
+HttpCallHttpClientPooling,AkkaParallelTest,10,10,10,1862.10,1676.00,1985.00,95.90
+HttpCallHttpClientPooling,StreamFlatMapMergeTest,10,10,10,1802.50,1661.00,1925.00,102.11
+HttpCallHttpClientPooling,StreamFlatMapMergeAsyncTest,10,10,10,1866.30,1685.00,2251.00,184.39
+HttpCallHttpClientPooling,StreamQueueTest,10,10,10,1852.40,1647.00,2082.00,135.03
+HttpCallHttpClientPooling,StreamQueueAsyncTest,10,10,10,1818.20,1573.00,2066.00,158.30

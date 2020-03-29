@@ -6,7 +6,7 @@ import okhttp3.Response;
 
 import java.io.IOException;
 
-public class HttpCall implements UnitOfWork<String> {
+public class HttpCallOkHttpBlocking implements UnitOfWork<String> {
     private final OkHttpClient client = new OkHttpClient();
 
     @Override
@@ -23,5 +23,10 @@ public class HttpCall implements UnitOfWork<String> {
 
             return null;
         }
+    }
+
+    @Override
+    public void close() {
+        // no impl
     }
 }

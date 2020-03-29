@@ -1,4 +1,6 @@
 #!/bin/bash
 
-Rscript --vanilla stats.R Pi.csv Pi.pdf
-Rscript --vanilla stats.R HttpCall.csv HttpCall.pdf
+for f in *.csv
+do
+  Rscript --vanilla stats.R "$f" "${f%%.csv}.pdf"
+done

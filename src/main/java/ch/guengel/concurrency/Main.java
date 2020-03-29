@@ -11,14 +11,10 @@ import ch.guengel.concurrency.statistics.Statistics;
 import ch.guengel.concurrency.statistics.TestStatistics;
 import ch.guengel.concurrency.test.ConcurrencyTest;
 import ch.guengel.concurrency.test.TestResult;
-import ch.guengel.concurrency.workunits.HttpCall;
-import ch.guengel.concurrency.workunits.Pi;
-import ch.guengel.concurrency.workunits.UnitOfWork;
+import ch.guengel.concurrency.workunits.*;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Main {
@@ -26,9 +22,28 @@ public class Main {
     private static final int CONCURRENCY_LEVEL = 10;
     private static final int TEST_REPETITIONS = 10;
 
-    public static void main(String[] args) {
-        List<UnitOfWork<?>> unitOfWorks = Arrays.asList(new Pi(), new HttpCall());
-        unitOfWorks.forEach(Main::measure);
+    public static void main(String[] args) throws Exception {
+        List<UnitOfWork<?>> unitOfWorks = new LinkedList<>(
+                Arrays.asList(
+                        new CpuBoundPi(),
+                        new HttpCallOkHttpBlocking(),
+                        new HttpCallOkHttpAsync(),
+                        new HttpCallHttpClient(),
+                        new HttpCallHttpClientPooling())
+        );
+
+        Iterator<UnitOfWork<?>> workIterator = unitOfWorks.iterator();
+        while (workIterator.hasNext()) {
+            UnitOfWork<?> unitOfWork = workIterator.next();
+
+            measure(unitOfWork);
+
+            unitOfWork.close();
+
+            workIterator.remove();
+            // Force the garbage collector
+            System.gc(); //NOSONAR
+        }
     }
 
     private static void measure(UnitOfWork<?> unitOfWork) {
@@ -64,6 +79,7 @@ public class Main {
     @NotNull
     private static List<ConcurrencyTest> compileConcurrencyTests(UnitOfWork<?> unitOfWork, Materializer materializer) {
         return Arrays.asList(
+                new OneUnitOfWork(unitOfWork),
                 new NoConcurrency(unitOfWork, NUMBER_OF_WORK_UNITS),
                 new CompletionStageTest(unitOfWork, NUMBER_OF_WORK_UNITS),
                 new CompletionStageWithExecutorServiceTest(unitOfWork, CONCURRENCY_LEVEL, NUMBER_OF_WORK_UNITS),
@@ -80,6 +96,7 @@ public class Main {
     }
 
     private static List<TestResult> runTest(ConcurrencyTest concurrencyTest) {
+        System.err.printf("Commence %s%n", concurrencyTest.getTestName());
         try (ConcurrencyTest test = concurrencyTest) {
             ArrayList<TestResult> testResults = new ArrayList<>();
             for (int i = 0; i < TEST_REPETITIONS; i++) {

@@ -20,5 +20,6 @@ repositories {
 
 dependencies {
     compile group: 'com.typesafe.akka', name: 'akka-stream_2.12', version: '2.5.30'
+    compile 'org.apache.httpcomponents:httpclient:4.5.12'
     implementation("com.squareup.okhttp3:okhttp:4.4.0")
 }

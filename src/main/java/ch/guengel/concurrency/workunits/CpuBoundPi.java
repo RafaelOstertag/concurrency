@@ -1,6 +1,6 @@
 package ch.guengel.concurrency.workunits;
 
-public class Pi implements UnitOfWork<Double> {
+public class CpuBoundPi implements UnitOfWork<Double> {
     @Override
     public Double result() {
         double denominator1 = -1;
@@ -14,5 +14,10 @@ public class Pi implements UnitOfWork<Double> {
         }
 
         return piHalf * 2.0;
+    }
+
+    @Override
+    public void close() {
+        // no impl
     }
 }

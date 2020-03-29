@@ -25,6 +25,11 @@ public class CompletionServiceTest implements ConcurrencyTest {
     }
 
     @Override
+    public String getTestName() {
+        return unitOfWork.getClass().getSimpleName() + ":" + this.getClass().getSimpleName();
+    }
+
+    @Override
     public TestResult test() {
         Future<?>[] results = new Future[numberOfWorkUnits];
 

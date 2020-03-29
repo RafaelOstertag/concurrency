@@ -18,6 +18,11 @@ public class CompletionStageTest implements ConcurrencyTest {
     }
 
     @Override
+    public String getTestName() {
+        return unitOfWork.getClass().getSimpleName() + ":" + this.getClass().getSimpleName();
+    }
+
+    @Override
     public TestResult test() {
         CompletableFuture<?>[] completableFutures = new CompletableFuture[numberOfWorkUnits];
         for (int i = 0; i < numberOfWorkUnits; i++) {
