@@ -12,7 +12,7 @@ public class HttpCallOkHttpAsync implements UnitOfWork<String> {
     @Override
     public String result() {
         Request request = new Request.Builder()
-                .url("https://yapet.guengel.ch/downloads/yapet-2.3.tar.xz")
+                .url("http://localhost/image.png")
                 .build();
 
         CompletableFuture<String> future = new CompletableFuture<>();

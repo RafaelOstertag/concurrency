@@ -18,7 +18,7 @@ public class HttpCallHttpClientPooling implements UnitOfWork<String> {
 
 
     public HttpCallHttpClientPooling() {
-        uri = URI.create("https://yapet.guengel.ch/downloads/yapet-2.3.tar.xz");
+        uri = URI.create("http://localhost/image.png");
         cm = new PoolingHttpClientConnectionManager();
         cm.setDefaultMaxPerRoute(20);
         cm.setMaxTotal(20);

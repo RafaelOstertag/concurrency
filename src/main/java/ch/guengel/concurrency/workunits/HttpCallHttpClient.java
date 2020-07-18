@@ -14,7 +14,7 @@ public class HttpCallHttpClient implements UnitOfWork<String> {
 
     @Override
     public String result() {
-        HttpGet httpGet = new HttpGet("https://yapet.guengel.ch/downloads/yapet-2.3.tar.xz");
+        HttpGet httpGet = new HttpGet("http://localhost/image.png");
         try (CloseableHttpResponse response = httpClient.execute(httpGet)) {
             HttpEntity entity = response.getEntity();
             return entityToString(entity);

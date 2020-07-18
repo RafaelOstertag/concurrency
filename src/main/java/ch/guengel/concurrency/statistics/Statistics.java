@@ -34,7 +34,7 @@ public final class Statistics {
     }
 
     private static double stdDev(List<TestResult> testResults, double mean) {
-        if (testResults.size() < 1) {
+        if (testResults.isEmpty()) {
             return 0.0;
         }
 
