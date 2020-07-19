@@ -1,6 +1,9 @@
 package ch.guengel.concurrency.akka;
 
+import akka.Done;
 import akka.NotUsed;
+import akka.actor.ActorSystem;
+import akka.stream.ActorMaterializer;
 import akka.stream.Materializer;
 import akka.stream.OverflowStrategy;
 import akka.stream.QueueOfferResult;
@@ -13,7 +16,6 @@ import ch.guengel.concurrency.timing.Timing;
 import ch.guengel.concurrency.timing.TimingResult;
 import ch.guengel.concurrency.workunits.UnitOfWork;
 
-import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -23,11 +25,13 @@ public class StreamQueueAsyncTest implements ConcurrencyTest {
     private final UnitOfWork<?> unitOfWork;
     private final int concurrency;
     private final Materializer materializer;
+    private final ActorSystem actorSystem;
 
-    public StreamQueueAsyncTest(UnitOfWork<?> unitOfWork, int concurrency, int numberOfWorkUnits, Materializer materializer) {
+    public StreamQueueAsyncTest(UnitOfWork<?> unitOfWork, int concurrency, int numberOfWorkUnits) {
         this.unitOfWork = unitOfWork;
         this.concurrency = concurrency;
-        this.materializer = materializer;
+        this.actorSystem = ActorSystem.create(this.getClass().getSimpleName());
+        this.materializer = ActorMaterializer.create(actorSystem);
         SourceQueueWithComplete<Object> sourceQueue = Source.queue(concurrency, OverflowStrategy.backpressure())
                 .map(n -> unitOfWork.result())
                 .async()
@@ -50,12 +54,12 @@ public class StreamQueueAsyncTest implements ConcurrencyTest {
 
     @Override
     public TestResult test() {
-        TimingResult<List<QueueOfferResult>> result = Timing.timeIt(() -> source.runWith(Sink.seq(), materializer).toCompletableFuture().join());
+        TimingResult<Done> result = Timing.timeIt(() -> source.runWith(Sink.ignore(), materializer).toCompletableFuture().join());
         return new TestResult(this, unitOfWork, result.getDuration(), numberOfWorkUnits, concurrency);
     }
 
     @Override
     public void close() {
-        // no impl
+        actorSystem.terminate();
     }
 }

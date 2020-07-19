@@ -1,6 +1,8 @@
 package ch.guengel.concurrency.akka;
 
 import akka.NotUsed;
+import akka.actor.ActorSystem;
+import akka.stream.ActorMaterializer;
 import akka.stream.Materializer;
 import akka.stream.OverflowStrategy;
 import akka.stream.QueueOfferResult;
@@ -23,11 +25,13 @@ public class StreamQueueTest implements ConcurrencyTest {
     private final UnitOfWork<?> unitOfWork;
     private final int concurrency;
     private final Materializer materializer;
+    private final ActorSystem actorSystem;
 
-    public StreamQueueTest(UnitOfWork<?> unitOfWork, int concurrency, int numberOfWorkUnits, Materializer materializer) {
+    public StreamQueueTest(UnitOfWork<?> unitOfWork, int concurrency, int numberOfWorkUnits) {
         this.unitOfWork = unitOfWork;
         this.concurrency = concurrency;
-        this.materializer = materializer;
+        this.actorSystem = ActorSystem.create(this.getClass().getSimpleName());
+        this.materializer = ActorMaterializer.create(actorSystem);
         SourceQueueWithComplete<Object> sourceQueue = Source.queue(concurrency, OverflowStrategy.backpressure())
                 .map(n -> unitOfWork.result())
                 .to(Sink.seq())
@@ -55,6 +59,6 @@ public class StreamQueueTest implements ConcurrencyTest {
 
     @Override
     public void close() {
-        // no impl
+        actorSystem.terminate();
     }
 }

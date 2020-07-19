@@ -27,6 +27,6 @@ public class HttpCallOkHttpBlocking implements UnitOfWork<String> {
 
     @Override
     public void close() {
-        // no impl
+        client.dispatcher().executorService().shutdown();
     }
 }

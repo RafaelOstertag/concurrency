@@ -1,12 +1,10 @@
 package ch.guengel.concurrency;
 
-import akka.actor.ActorSystem;
-import akka.stream.ActorMaterializer;
-import akka.stream.Materializer;
 import ch.guengel.concurrency.akka.*;
 import ch.guengel.concurrency.purejava.CompletionServiceTest;
 import ch.guengel.concurrency.purejava.CompletionStageTest;
 import ch.guengel.concurrency.purejava.CompletionStageWithExecutorServiceTest;
+import ch.guengel.concurrency.purejava.StreamsTest;
 import ch.guengel.concurrency.statistics.Statistics;
 import ch.guengel.concurrency.statistics.TestStatistics;
 import ch.guengel.concurrency.test.ConcurrencyTest;
@@ -29,7 +27,8 @@ public class Main {
                         new HttpCallOkHttpBlocking(),
                         new HttpCallOkHttpAsync(),
                         new HttpCallHttpClient(),
-                        new HttpCallHttpClientPooling())
+                        new HttpCallHttpClientPooling()
+                )
         );
 
         Iterator<UnitOfWork<?>> workIterator = unitOfWorks.iterator();
@@ -55,10 +54,7 @@ public class Main {
             }
         }
 
-        final ActorSystem system = ActorSystem.create("QuickStart");
-        final Materializer materializer = ActorMaterializer.create(system);
-
-        List<ConcurrencyTest> tests = compileConcurrencyTests(unitOfWork, materializer);
+        List<ConcurrencyTest> tests = compileConcurrencyTests(unitOfWork);
 
         List<TestStatistics> testResults = tests.stream()
                 .map(Main::runTest)
@@ -72,26 +68,25 @@ public class Main {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        system.terminate();
     }
 
     @NotNull
-    private static List<ConcurrencyTest> compileConcurrencyTests(UnitOfWork<?> unitOfWork, Materializer materializer) {
+    private static List<ConcurrencyTest> compileConcurrencyTests(UnitOfWork<?> unitOfWork) {
         return Arrays.asList(
                 new OneUnitOfWork(unitOfWork),
                 new NoConcurrency(unitOfWork, NUMBER_OF_WORK_UNITS),
                 new CompletionStageTest(unitOfWork, NUMBER_OF_WORK_UNITS),
+                new StreamsTest(unitOfWork, CONCURRENCY_LEVEL, NUMBER_OF_WORK_UNITS),
                 new CompletionStageWithExecutorServiceTest(unitOfWork, CONCURRENCY_LEVEL, NUMBER_OF_WORK_UNITS),
                 new CompletionServiceTest(unitOfWork, CONCURRENCY_LEVEL, NUMBER_OF_WORK_UNITS),
-                new SimpleStreamTest(unitOfWork, NUMBER_OF_WORK_UNITS, materializer),
-                new SimpleStreamMapAsyncTest(unitOfWork, CONCURRENCY_LEVEL, NUMBER_OF_WORK_UNITS, materializer),
-                new SimpleStreamAsyncTest(unitOfWork, NUMBER_OF_WORK_UNITS, materializer),
-                new AkkaParallelTest(unitOfWork, CONCURRENCY_LEVEL, NUMBER_OF_WORK_UNITS, materializer),
-                new StreamFlatMapMergeTest(unitOfWork, CONCURRENCY_LEVEL, NUMBER_OF_WORK_UNITS, materializer),
-                new StreamFlatMapMergeAsyncTest(unitOfWork, CONCURRENCY_LEVEL, NUMBER_OF_WORK_UNITS, materializer),
-                new StreamQueueTest(unitOfWork, CONCURRENCY_LEVEL, NUMBER_OF_WORK_UNITS, materializer),
-                new StreamQueueAsyncTest(unitOfWork, CONCURRENCY_LEVEL, NUMBER_OF_WORK_UNITS, materializer)
+                new SimpleStreamTest(unitOfWork, NUMBER_OF_WORK_UNITS),
+                new SimpleStreamMapAsyncTest(unitOfWork, CONCURRENCY_LEVEL, NUMBER_OF_WORK_UNITS),
+                new SimpleStreamAsyncTest(unitOfWork, NUMBER_OF_WORK_UNITS),
+                new AkkaParallelTest(unitOfWork, CONCURRENCY_LEVEL, NUMBER_OF_WORK_UNITS),
+                new StreamFlatMapMergeTest(unitOfWork, CONCURRENCY_LEVEL, NUMBER_OF_WORK_UNITS),
+                new StreamFlatMapMergeAsyncTest(unitOfWork, CONCURRENCY_LEVEL, NUMBER_OF_WORK_UNITS)
+//                new StreamQueueTest(unitOfWork, CONCURRENCY_LEVEL, NUMBER_OF_WORK_UNITS)
+//                new StreamQueueAsyncTest(unitOfWork, CONCURRENCY_LEVEL, NUMBER_OF_WORK_UNITS)
         );
     }
 

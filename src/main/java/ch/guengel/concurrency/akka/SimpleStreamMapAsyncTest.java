@@ -1,6 +1,8 @@
 package ch.guengel.concurrency.akka;
 
 import akka.NotUsed;
+import akka.actor.ActorSystem;
+import akka.stream.ActorMaterializer;
 import akka.stream.Materializer;
 import akka.stream.javadsl.Sink;
 import akka.stream.javadsl.Source;
@@ -21,11 +23,13 @@ public class SimpleStreamMapAsyncTest implements ConcurrencyTest {
     private final Materializer materializer;
     private final UnitOfWork<?> unitOfWork;
     private final int concurrency;
+    private final ActorSystem actorSystem;
 
-    public SimpleStreamMapAsyncTest(UnitOfWork<?> unitOfWork, int concurrency, int numberOfWorkUnits, Materializer materializer) {
+    public SimpleStreamMapAsyncTest(UnitOfWork<?> unitOfWork, int concurrency, int numberOfWorkUnits) {
         this.unitOfWork = unitOfWork;
         this.concurrency = concurrency;
-        this.materializer = materializer;
+        this.actorSystem = ActorSystem.create(this.getClass().getSimpleName());
+        this.materializer = ActorMaterializer.create(actorSystem);
         this.source = Source
                 .from(IntStream
                         .range(0, numberOfWorkUnits)
@@ -48,6 +52,6 @@ public class SimpleStreamMapAsyncTest implements ConcurrencyTest {
 
     @Override
     public void close() {
-        // no impl
+        actorSystem.terminate();
     }
 }

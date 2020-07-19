@@ -1,10 +1,8 @@
 package ch.guengel.concurrency.akka;
 
 import akka.NotUsed;
-import akka.stream.FlowShape;
-import akka.stream.Materializer;
-import akka.stream.UniformFanInShape;
-import akka.stream.UniformFanOutShape;
+import akka.actor.ActorSystem;
+import akka.stream.*;
 import akka.stream.javadsl.*;
 import ch.guengel.concurrency.test.ConcurrencyTest;
 import ch.guengel.concurrency.test.TestResult;
@@ -22,11 +20,13 @@ public class AkkaParallelTest implements ConcurrencyTest {
     private final Materializer materializer;
     private final UnitOfWork<?> unitOfWork;
     private final int concurrency;
+    private final ActorSystem actorSystem;
 
-    public AkkaParallelTest(UnitOfWork<?> unitOfWork, int concurrency, int numberOfWorkUnits, Materializer materializer) {
+    public AkkaParallelTest(UnitOfWork<?> unitOfWork, int concurrency, int numberOfWorkUnits) {
         this.unitOfWork = unitOfWork;
+        this.actorSystem = ActorSystem.create(this.getClass().getSimpleName());
+        this.materializer = ActorMaterializer.create(actorSystem);
         this.concurrency = concurrency;
-        this.materializer = materializer;
         this.source = Source
                 .from(IntStream
                         .range(0, numberOfWorkUnits)
@@ -68,6 +68,6 @@ public class AkkaParallelTest implements ConcurrencyTest {
 
     @Override
     public void close() {
-        // no impl
+        actorSystem.terminate();
     }
 }
